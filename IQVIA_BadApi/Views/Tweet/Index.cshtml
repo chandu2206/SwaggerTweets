@@ -1,0 +1,48 @@
+﻿@model IEnumerable<IQVIA_BadApi.Models.Tweet>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <link href="~/Style/Index.css" rel="stylesheet" />    
+</head>
+<body >    
+        <h1>Welcome to Swagger tweets</h1>
+        <h2>Displaying tweets between @ViewData["startDate"] and @ViewData["endDate"]. Record Count: @ViewData["Count"]</h2>
+
+        <table class="table" style="height:auto; overflow-y:scroll">
+            <tr>
+                <th>
+                    @Html.DisplayName("Id")
+                </th>
+                <th>
+                    @Html.DisplayName("Time Stamp")
+                </th>
+                <th>
+                    @Html.DisplayName("Tweet")
+                </th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.stamp)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.text)
+                    </td>
+                </tr>
+            }
+        </table>
+    
+</body>
+</html>
