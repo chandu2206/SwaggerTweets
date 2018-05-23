@@ -68,7 +68,7 @@ namespace IQVIA_BadApi.Controllers
                                 tweetCount = TweetInfo.Count;
 
                                 //Set last tweet time stamp to startDate for getting next set of data from swagger api
-                                startDate = Convert.ToString(Convert.ToDateTime(TweetInfo[TweetInfo.Count - 1].stamp).AddMilliseconds(1).ToUniversalTime().
+                                startDate = Convert.ToString(Convert.ToDateTime(TweetInfo[TweetInfo.Count - 1].stamp).ToUniversalTime().
                                     ToString("yyyy-MM-ddTHH:mm:ss.fffZ"));
                             }
                         }
