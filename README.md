@@ -4,3 +4,4 @@ Prerequisite: VS 2017
 3. Click on Get Tweet to extract data. Will take 3 minutes as am looping to get all data between specified date range
 4. Implementation logic is available in TweetController.cs file 
 6. API request and Data display is done with local offset
+7. Also you can get Json response. API Structure [host name]/tweet/getdata?sDate=[Start Date]&eDate=[End Date]&offSet=[Local time offSet]
