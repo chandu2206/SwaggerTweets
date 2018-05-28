@@ -76,6 +76,10 @@ namespace IQVIA_BadApi.Controllers
                                 //Set last tweet time stamp to startDate for getting next set of data from swagger api
                                 startDate = Convert.ToString(Convert.ToDateTime(TweetInfo[TweetInfo.Count - 1].stamp).ToUniversalTime().
                                     ToString("yyyy-MM-ddTHH:mm:ss.fffZ"));
+									
+								//Avoid getting duplicated last row
+                                //startDate = Convert.ToString(Convert.ToDateTime(TweetInfo[TweetInfo.Count - 1].stamp.AddMilliseconds(1)).ToUniversalTime().
+                                //    ToString("yyyy-MM-ddTHH:mm:ss.fffZ"));
                             }
                         }
                     }
