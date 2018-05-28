@@ -8,7 +8,7 @@ namespace IQVIA_BadApi.Models
     public class Tweet
     {
         public string id;
-        public string stamp;
+        public DateTime stamp;
         public string text;
     }
 }

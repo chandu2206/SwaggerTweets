@@ -1,48 +1,60 @@
-﻿@model IEnumerable<IQVIA_BadApi.Models.Tweet>
-
+﻿@using IQVIA_BadApi.Models;
 @{
     Layout = null;
 }
 
 <!DOCTYPE html>
+
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>Index</title>
-    <link href="~/Style/Index.css" rel="stylesheet" />    
+    <title>Tweet Local</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <link href="~/Style/Index.css" rel="stylesheet" />
+    <script>
+        $(document).ready(function () {
+            $("button").click(function () {
+
+                //Remove loading prior rows if any
+                $("#tbl").find("tr").remove();
+                var dt = new Date();
+                document.getElementById("status").innerHTML = "Loading please wait, will take few minutes....";
+                $.ajax({
+                    //Set start time, end time and offset
+                    url: "http://localhost:28866/tweet/GetData?sDate=" + startDate.value + "&eDate=" + endDate.value + "&offSet=" +
+                    dt.getTimezoneOffset(), success: function (tweet) {
+                       //Bind header
+                        var tr = "<tr> <th>Id</th> <th>Time Stamp</th> <th>Text</th> </tr>";
+                        $('table').append(tr);
+                        for (var i = 0; i < tweet.length; i++) {
+                            //Bind Data
+                            var date = new Date(tweet[i].stamp.match(/\d+/)[0] * 1);
+                            tr = $('<tr/>');
+                            tr.append("<td>" + tweet[i].id + "</td>");
+                            tr.append("<td>" + date + "</td>");
+                            tr.append("<td>" + tweet[i].text + "</td>");
+                            $('table').append(tr);
+                        }
+                        document.getElementById("status").innerHTML = "";
+                    }
+                });
+
+            });
+        });
+    </script>
 </head>
-<body >    
+<body>
+    <div>
         <h1>Welcome to Swagger tweets</h1>
-        <h2>Displaying tweets between @ViewData["startDate"] and @ViewData["endDate"]. Record Count: @ViewData["Count"]</h2>
-
-        <table class="table" style="height:auto; overflow-y:scroll">
-            <tr>
-                <th>
-                    @Html.DisplayName("Id")
-                </th>
-                <th>
-                    @Html.DisplayName("Time Stamp")
-                </th>
-                <th>
-                    @Html.DisplayName("Tweet")
-                </th>
-            </tr>
-
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.id)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.stamp)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.text)
-                    </td>
-                </tr>
-            }
-        </table>
-    
+        <i>Start Date:</i> <input id="startDate" type="date" name="startDate" value="2016-01-01" /> &nbsp &nbsp
+        <i>End Date:</i> <input id="endDate" type="date" name="endDate" value="2017-12-31" /> &nbsp &nbsp
+        <button>Get Tweets</button>
+        <br />
+        <div id="status"></div>
+        <table id="tbl" class="table" style="height:auto; overflow-y:scroll"></table>
+    </div>
 </body>
 </html>

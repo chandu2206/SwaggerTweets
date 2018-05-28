@@ -11,14 +11,20 @@ using Newtonsoft.Json;
 using System.Configuration;
 
 namespace IQVIA_BadApi.Controllers
-{    
+{
     public class TweetController : Controller
     {
         string Baseurl = "https://badapi.iqvia.io/";
 
-        // GET: To get tweets between date range mentioned in web config
+        //Load page
+        public ActionResult Index()
+        {
+            return View();
+        }
+
+        //GET: To get tweets between date range mentioned in web config
         [HttpGet]
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> GetData(DateTime sDate, DateTime eDate, double offSet)
         {
             #region
             try
@@ -26,11 +32,11 @@ namespace IQVIA_BadApi.Controllers
                 //Initialization 
                 int tweetCount = 0;
                 List<Tweet> TweetInfo = new List<Tweet>();
-                string startDate = ConfigurationManager.AppSettings["startDate"];
-                string endDate = ConfigurationManager.AppSettings["endDate"];
-                ViewData["startDate"] = startDate;
-                ViewData["endDate"] = endDate;
-                
+                //Adding offset
+                string startDate = sDate.AddMinutes(offSet).ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
+                //Adding offset and subtracting 1 millisecond 
+                string endDate = eDate.AddMilliseconds(-1).AddDays(1).AddMinutes(offSet).ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
+
                 //Looping to get all records between dates
                 while (true)
                 {
@@ -54,7 +60,7 @@ namespace IQVIA_BadApi.Controllers
 
                             //Deserializing the response recieved from web api and storing into the Tweet list  
                             //TweetInfo = JsonConvert.DeserializeObject<List<Tweet>>(TweetResponse);
-                            TweetInfo.AddRange(JsonConvert.DeserializeObject<List<Tweet>>(TweetResponse));                            
+                            TweetInfo.AddRange(JsonConvert.DeserializeObject<List<Tweet>>(TweetResponse));
 
                             //Compare total tweet count until previous request with current tweet count
                             if ((TweetInfo.Count - tweetCount) < 100) //TweetInfo.Count == tweetCount || 
@@ -81,16 +87,18 @@ namespace IQVIA_BadApi.Controllers
                              group tw by tw.id into g
                              select g.First()).ToList();
 
-                ViewData["Count"] = TweetInfo.Count;
+                ViewData["Count"] = "Record Count: " + TweetInfo.Count;
 
                 //returning tweet list to view  
-                return View(TweetInfo);
+                var jsonResult = Json(TweetInfo, JsonRequestBehavior.AllowGet);
+                jsonResult.MaxJsonLength = int.MaxValue;
+                return jsonResult;
             }
             catch (Exception ex)
             {
-                return View("Error", new HandleErrorInfo(ex, "Tweet", "Index"));
+                return Json(ex.Message, JsonRequestBehavior.AllowGet);
             }
             #endregion
-        }        
+        }
     }
 }
