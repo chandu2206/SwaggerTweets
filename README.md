@@ -5,4 +5,8 @@ Prerequisite: VS 2017
 4. Implementation logic is available in TweetController.cs file 
 6. API request and Data display is done with local offset
 7. Also you can get Json response. API Structure [host name]/tweet/getdata?sDate=[Start Date]&eDate=[End Date]&offSet=[Local time offSet]
+   Format
+   [Start Date]:YYYY-MM-DD
+   [Start Date]:YYYY-MM-DD
+   [Local time offSet]: Should be in minutes. Ex: For India(GMT + 5.30): -330
    Ex: http://localhost:28866/tweet/GetData?sDate=2016-01-01&eDate=2017-12-31&offSet=-330
